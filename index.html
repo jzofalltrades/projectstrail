@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects — jzofalltrades</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='7' fill='%23e3350d'/%3E%3C/svg%3E">
+<meta name="description" content="Things Jayant Bhanse has built: robots, rockets and other hardware.">
+<style>
+  :root {
+    --bg: #0d0d0d;
+    --panel: #171717;
+    --line: #2a2a2a;
+    --ink: #f3f1ec;
+    --dim: #9a968d;
+    --red: #e3350d;
+    --amber: #ffb300;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  header { padding: 64px 0 28px; }
+  .tabs {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(13, 13, 13, .92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .tabs .wrap { display: flex; gap: 6px; }
+  .tabs button {
+    background: none; border: 0; color: var(--dim); font: inherit;
+    font-size: 16px; font-weight: 600; padding: 14px 18px 12px; cursor: pointer;
+    border-bottom: 3px solid transparent; margin-bottom: -1px;
+  }
+  .tabs button:hover { color: var(--ink); }
+  .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--red); }
+  .tabs button:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
+  [role="tabpanel"] { padding-top: 32px; }
+  .handle {
+    font-family: ui-monospace, Consolas, monospace;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber);
+  }
+  h1 { font-size: clamp(38px, 7vw, 68px); line-height: 1.05; letter-spacing: -1.5px; margin: 10px 0 12px; }
+  h1 span { color: var(--red); }
+  header p { color: var(--dim); max-width: 520px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 20px;
+    padding: 36px 0 56px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .info { padding: 20px 20px 16px; flex: 1; }
+  .card.featured { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr minmax(260px, 340px); }
+  .card.featured .info { padding: 32px; align-self: center; }
+  .card.featured h2 { font-size: clamp(24px, 3.2vw, 34px); }
+  .card.featured .desc { font-size: 16px; max-width: 520px; }
+  .card.featured .video { border-top: 0; border-left: 1px solid var(--line); }
+  @media (max-width: 720px) {
+    .card.featured { display: flex; }
+    .card.featured .info { padding: 20px 20px 16px; }
+    .card.featured .video { border-left: 0; border-top: 1px solid var(--line); }
+  }
+  .num { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--red); letter-spacing: 1.5px; }
+  .card h2 { font-size: 21px; line-height: 1.25; margin: 6px 0 8px; }
+  .desc { color: var(--dim); font-size: 14.5px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag { font-size: 11.5px; border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; color: var(--dim); }
+
+  .links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 14px; font-size: 13.5px; }
+  .links a { color: var(--amber); text-decoration: none; border-bottom: 1px solid transparent; }
+  .links a:hover, .links a:focus-visible { border-bottom-color: var(--amber); }
+
+  /* video slot, below the project text */
+  .video {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: #000 center / cover no-repeat;
+    border-top: 1px solid var(--line);
+  }
+  .video iframe, .video video { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video.still { background: #fff; }
+  .video.still.photo img { object-fit: cover; padding: 0; }
+  .video.still img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 16px; }
+  .play {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, .8);
+    background: rgba(0, 0, 0, .35);
+    border: 0; color: var(--ink); font: inherit; font-size: 13px; cursor: pointer;
+  }
+  .play i {
+    width: 62px; height: 62px; border-radius: 50%;
+    background: var(--red);
+    display: grid; place-items: center;
+    transition: transform .15s;
+  }
+  .play i::after {
+    content: ""; margin-left: 5px;
+    border-style: solid; border-width: 11px 0 11px 18px;
+    border-color: transparent transparent transparent #fff;
+  }
+  .play:hover i, .play:focus-visible i { transform: scale(1.1); }
+  .play:focus-visible { outline: 2px solid var(--amber); outline-offset: -2px; }
+  .play[disabled] { cursor: default; color: var(--dim); }
+  .play[disabled] i { background: #333; transform: none; }
+
+  .section-title {
+    font-size: clamp(24px, 3.4vw, 32px); letter-spacing: -.5px;
+    padding-top: 36px; border-top: 1px solid var(--line);
+  }
+  .section-title.first { border-top: 0; }
+  #vlsi-grid, #grid, #client-grid { padding-top: 24px; }
+  .client { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--amber); letter-spacing: 1.5px; text-transform: uppercase; }
+  footer { border-top: 1px solid var(--line); padding: 26px 0 44px; color: var(--dim); font-size: 13.5px; }
+  footer a { color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) { .play i { transition: none; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="handle">jzofalltrades</div>
+    <h1>Things I <span>build</span>.</h1>
+    <p>Chip design and embedded hardware by Jayant Bhanse.</p>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Project type">
+  <div class="wrap">
+    <button role="tab" id="tab-vlsi" aria-controls="panel-vlsi" data-tab="vlsi">VLSI</button>
+    <button role="tab" id="tab-embedded" aria-controls="panel-embedded" data-tab="embedded">Embedded</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <section role="tabpanel" id="panel-vlsi" aria-labelledby="tab-vlsi">
+    <h2 class="section-title first">VLSI projects</h2>
+    <div class="grid" id="vlsi-grid"></div>
+  </section>
+
+  <section role="tabpanel" id="panel-embedded" aria-labelledby="tab-embedded" hidden>
+    <h2 class="section-title first">Embedded projects</h2>
+    <div class="grid" id="grid"></div>
+
+    <h2 class="section-title">Client projects</h2>
+    <div class="grid" id="client-grid"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    &copy; <span id="yr"></span> Jayant Bhanse &middot;
+    <a href="https://github.com/jzofalltrades" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   PROJECTS — edit only this list.
+
+   video:  a YouTube link   "https://youtu.be/xxxx"
+           or a file in the repo   "videos/mars-rover.mp4"
+           leave "" and the card shows "Video coming soon"
+   poster: optional thumbnail image, e.g. "images/mars-rover.jpg"
+   image:  no video? show a picture instead, e.g. "images/rocket-test-pad.png"
+   photo:  true for a real photo (fills the box); leave out for CAD renders on white
+   bg:     box colour behind a picture shown whole, e.g. "#6b6b6b"
+   featured: true makes the card full width (use for your best project)
+   ratio:  optional video box shape; default "4 / 5" suits phone (vertical) videos,
+           use "16 / 9" for a wide video
+   desc / tags: leave "" / [] to hide them
+   links:  optional buttons, [{ label: "GitHub", url: "https://..." }]
+   ============================================================ */
+const PROJECTS = [
+  {
+    featured: true,
+    title: "Q-dex — a real handheld Pokédex",
+    desc: "Point it at a Pokémon in any form — card, picture, figure, poster or plushie — and it tells you which one it is. Runs AI on the device, talks back as Professor Oak, and lives in a 3D-printed Gen-1 shell.",
+    tags: ["Arduino UNO Q", "On-device AI", "Python", "Fusion 360", "3D printed"],
+    links: [
+      { label: "Website", url: "https://jzofalltrades.github.io/Q-dex/" },
+      { label: "GitHub", url: "https://github.com/jzofalltrades/Q-dex" },
+      { label: "Hackster", url: "https://hackster.io/jzofalltrades/q-dex-a-real-handheld-pokedex-with-on-device-ai-e26e0c" },
+      { label: "MakerWorld", url: "https://makerworld.com/en/models/3374671-q-dexter-a-real-handheld-pokedex" }
+    ],
+    video: "videos/q-dex.mp4", poster: "images/q-dex.jpg"
+  },
+  {
+    title: "Mars Rover Replica",
+    desc: "A 1:16 scale Mars rover with six independently mounted wheels, built to actually drive.",
+    tags: ["1:16 scale", "6 wheels", "3D printed", "Rover"],
+    video: "videos/mars-rover.mp4", poster: "images/mars-rover.jpg"
+  },
+  {
+    title: "Robocon — Lagori",
+    desc: "Mentored an engineering college team for Robocon. The problem statement was Lagori.",
+    tags: ["Robocon", "Mentor", "Robotics"],
+    video: "videos/robocon.mp4", poster: ""
+  },
+  {
+    title: "ISRO GSLV Mk III Mist Lamp",
+    desc: "A model of ISRO's GSLV Mk III rocket that puffs mist lit by RGB light at its base, like an exhaust plume.",
+    tags: ["ISRO", "3D printed", "Mist", "RGB"],
+    video: "videos/isro-mist.mp4", poster: ""
+  },
+  {
+    title: "Rocket Motor Static Test Pad",
+    desc: "A ground test stand that holds a rocket motor in place while it is fired.",
+    tags: ["Rocketry", "Test stand", "CAD"],
+    video: "", poster: "", image: "images/rocket-test-pad.png"
+  },
+  {
+    title: "Mouth Organ",
+    desc: "",
+    tags: ["3D printed"],
+    video: "", poster: "", image: "images/mouth-organ.jpg", bg: "#6b6b6b"
+  },
+  {
+    title: "6-DOF Robotic Gripper Arm",
+    desc: "A servo-driven robotic arm with a gripper, 3D-printed parts, steered by hand with a row of potentiometer knobs.",
+    tags: ["Robotics", "6-DOF", "Servos", "3D printed"],
+    video: "", poster: "", image: "images/gripper-arm.jpg", photo: true
+  },
+  {
+    title: "Useless Machine",
+    desc: "Flip the switch on and it reaches out and flips it straight back off.",
+    tags: ["Robotics", "Just for fun"],
+    video: "videos/useless-machine.mp4", poster: ""
+  }
+];
+
+/* VLSI PROJECTS — text-only cards; add video/image to any of them later */
+const VLSI_PROJECTS = [
+  {
+    title: "RISC-V SoC with SHA-256 accelerator",
+    desc: "M.Tech thesis. A RISC-V SoC with a memory-mapped SHA-256 hardware accelerator, taken from RTL to GDSII at 14 nm. Signed off at 5.53 ns setup slack, 5.626 mW and 64,484 µm².",
+    tags: ["SAED 14nm", "Design Compiler", "ICC2", "PrimeTime"],
+    video: "", poster: ""
+  },
+  {
+    title: "Radiation-hardened SRAM",
+    desc: "Designed and simulated 6T and RHPD-12T SRAM cells and compared their hold, read and write noise margins, with SEU analysis for SRAM and memristor-based memory.",
+    tags: ["UMC 180nm", "SRAM", "Rad-hard", "SNM"],
+    video: "", poster: ""
+  }
+];
+
+/* CLIENT PROJECTS — same fields, plus client: "Company name".
+   No video or image needed; the card then shows text only. */
+const CLIENT_PROJECTS = [
+  {
+    client: "Mahindra & Mahindra",
+    title: "Vision-based gasket alignment",
+    desc: "A Raspberry Pi camera system for the tractor engine assembly line that detects the black gasket against the silver engine and checks it is aligned. Built with OpenCV and trained manually on images and live video.",
+    tags: ["Raspberry Pi", "OpenCV", "Computer vision", "Assembly line"],
+    video: "", poster: ""
+  },
+  {
+    client: "Zoho",
+    title: "3D-print design for a hardware rack",
+    desc: "Consulted on designing a hardware rack for 3D printing.",
+    tags: ["3D printing", "Design consulting"],
+    video: "", poster: ""
+  }
+];
+
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text) e.textContent = text;
+  return e;
+}
+
+function youtubeId(url) {
+  const m = url.match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/embed\/)([\w-]{11})/);
+  return m ? m[1] : null;
+}
+
+function startVideo(slot, p) {
+  slot.textContent = "";
+  const id = youtubeId(p.video);
+  if (id) {
+    const f = document.createElement("iframe");
+    f.src = "https://www.youtube-nocookie.com/embed/" + id + "?autoplay=1&rel=0";
+    f.title = p.title + " video";
+    f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    f.allowFullscreen = true;
+    slot.appendChild(f);
+  } else {
+    const v = document.createElement("video");
+    v.src = p.video;
+    v.controls = true;
+    v.autoplay = true;
+    v.playsInline = true;
+    if (p.poster) v.poster = p.poster;
+    slot.appendChild(v);
+  }
+}
+
+function render(list, grid) {
+list.forEach((p, i) => {
+  const card = el("article", p.featured ? "card featured" : "card");
+
+  const info = el("div", "info");
+  info.appendChild(p.client
+    ? el("div", "client", "Client · " + p.client)
+    : el("div", "num", "PROJECT " + String(i + 1).padStart(2, "0")));
+  info.appendChild(el("h2", "", p.title));
+  if (p.desc) info.appendChild(el("p", "desc", p.desc));
+  if (p.tags && p.tags.length) {
+    const tags = el("div", "tags");
+    p.tags.forEach(t => tags.appendChild(el("span", "tag", t)));
+    info.appendChild(tags);
+  }
+  if (p.links && p.links.length) {
+    const links = el("div", "links");
+    p.links.forEach(l => {
+      const a = el("a", "", l.label);
+      a.href = l.url; a.target = "_blank"; a.rel = "noopener";
+      links.appendChild(a);
+    });
+    info.appendChild(links);
+  }
+  card.appendChild(info);
+
+  if (!p.video && !p.image) { grid.appendChild(card); return; }
+  const slot = el("div", "video");
+  if (!p.video && p.image) {
+    slot.classList.add("still");
+    if (p.photo) slot.classList.add("photo");
+    if (p.bg) slot.style.background = p.bg;
+    const img = document.createElement("img");
+    img.src = p.image; img.alt = p.title; img.loading = "lazy";
+    slot.appendChild(img);
+    card.appendChild(slot);
+    grid.appendChild(card);
+    return;
+  }
+  if (p.ratio) slot.style.aspectRatio = p.ratio;
+  const id = p.video ? youtubeId(p.video) : null;
+  const poster = p.poster || (id ? "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg" : "");
+  if (poster) slot.style.backgroundImage = 'url("' + poster + '")';
+  else if (p.video && !id) {
+    // no poster given: show the video's own frame at 1 s as the thumbnail
+    const pv = document.createElement("video");
+    pv.src = p.video + "#t=1"; pv.muted = true; pv.preload = "metadata"; pv.playsInline = true;
+    pv.setAttribute("aria-hidden", "true"); pv.style.objectFit = "cover";
+    slot.appendChild(pv);
+  }
+
+  const btn = el("button", "play");
+  btn.type = "button";
+  btn.appendChild(el("i"));
+  if (p.video) {
+    btn.appendChild(el("span", "", "Watch video"));
+    btn.setAttribute("aria-label", "Play video: " + p.title);
+    btn.addEventListener("click", () => startVideo(slot, p));
+  } else {
+    btn.appendChild(el("span", "", "Video coming soon"));
+    btn.disabled = true;
+  }
+  slot.appendChild(btn);
+  card.appendChild(slot);
+
+  grid.appendChild(card);
+});
+
+}
+
+render(VLSI_PROJECTS, document.getElementById("vlsi-grid"));
+render(PROJECTS, document.getElementById("grid"));
+render(CLIENT_PROJECTS, document.getElementById("client-grid"));
+
+/* tabs: #vlsi or #embedded in the URL opens that tab directly */
+const tabs = [...document.querySelectorAll('[role="tab"]')];
+function showTab(name, push) {
+  tabs.forEach(t => {
+    const on = t.dataset.tab === name;
+    t.setAttribute("aria-selected", on);
+    t.tabIndex = on ? 0 : -1;
+    document.getElementById("panel-" + t.dataset.tab).hidden = !on;
+  });
+  document.querySelectorAll("video").forEach(v => { if (!v.muted) v.pause(); });
+  if (push) history.replaceState(null, "", "#" + name);
+}
+tabs.forEach((t, i) => {
+  t.addEventListener("click", () => showTab(t.dataset.tab, true));
+  t.addEventListener("keydown", e => {
+    if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+    const n = tabs[(i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length];
+    n.focus(); showTab(n.dataset.tab, true);
+  });
+});
+showTab(location.hash === "#embedded" ? "embedded" : "vlsi", false);
+
+document.getElementById("yr").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
